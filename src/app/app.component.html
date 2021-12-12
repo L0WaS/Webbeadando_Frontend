@@ -1,0 +1,159 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" style="color:rgb(255, 255, 255);">Vehicles</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarColor02">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active" style="size: 23px;">
+        <a class="nav-link" (click)="onOpenModal(null, 'add')">Add Vehicle <span class="sr-only">(current)</span></a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input type="search" (ngModelChange)="searchProduct(key.value)" #key="ngModel" ngModel
+             name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search vehicles..." required>
+    </form>
+  </div>
+</nav>
+<div class="container" id = "main-container">
+  <div class="row">
+    <div *ngFor="let product of products" class="ibox">
+      <div class="ibox-content product-box">
+        <div class="product-imitation">
+          <a href="https://www.youtube.com/watch?v=tYzMYcUty6s">
+            <img alt="Qries" src="https://raw.githubusercontent.com/martinsson/BugsZero-Kata/master/bugs-zero-image.jpg"
+            height="270">
+         </a>
+        </div>
+        <div class="product-desc">
+          <small class="text-muted">Name</small>
+          <a href="#" class="product-details">{{product?.name}}</a>
+          <small class="text-muted">Type</small>
+          <a href="#" class="product-details">{{product?.type}}</a>
+          <small class="text-muted">Kilograms</small>
+          <a href="#" class="product-details">{{product?.kilogram}}</a>
+          <small class="text-muted">Volume</small>
+          <a href="#" class="product-details">{{product?.volume}}</a>
+          <div class="float-right btn-group btn-group-sm">
+          <a (click)="onOpenModal(product, 'update')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Update"><i class="fa fa-pencil"></i></a>
+          <a (click)="onOpenModal(product, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addProductModalLabel">Add Vehicle</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addForm="ngForm" (ngSubmit)="onAddProduct(addForm)">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+          </div>
+          <div class="form-group">
+            <label for="type">Type</label>
+            <input type="email" ngModel name="type" class="form-control" id="type" placeholder="Type" required>
+          </div>
+          <div class="form-group">
+            <label for="kilogram">Kilogram</label>
+            <input type="text" ngModel name="kilogram" class="form-control" id="kilogram" placeholder="Kilogram" required>
+          </div>
+          <div class="form-group">
+            <label for="kilogram">Volume</label>
+            <input type="text" ngModel name="volume" class="form-control" id="volume" placeholder="Volume" required>
+          </div>
+          <div class="form-group">
+            <label for="imageUrl">Image URL</label>
+            <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="add-product-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Delete Prodcut Modal -->
+<div class="modal fade" id="deleteProductModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModelLabel">Delete Vehicle</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete vehicle {{deleteProduct?.name}}?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          <button (click)="onDeleteProduct(deleteProduct.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Modal -->
+<div class="modal fade" id="updateProductModal" tabindex="-1" role="dialog" aria-labelledby="productUpdateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+     <div class="modal-content">
+        <div class="modal-header">
+           <h5 class="modal-title" id="updateProductModalLabel">Update Vehicle {{updateProduct?.name}}</h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+           </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+             <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" ngModel="{{updateProduct?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name">
+             </div>
+             <input type="hidden" ngModel="{{updateProduct?.id}}" name="id" class="form-control" id="id" placeholder="ID">
+             <div class="form-group">
+                <label for="type">Type</label>
+                <input type="text" ngModel="{{updateProduct?.type}}" name="type" class="form-control" id="type" placeholder="Type">
+             </div>
+             <div class="form-group">
+                <label for="kilogram">Kilogram</label>
+                <input type="text" ngModel="{{updateProduct?.kilogram}}" name="kilogram" class="form-control" id="kilogram" placeholder="Kilogram">
+             </div>
+             <div class="form-group">
+              <label for="kilogram">Volume</label>
+              <input type="text" ngModel="{{updateProduct?.volume}}" name="volume" class="form-control" id="volume" placeholder="Volume">
+           </div>
+             <div class="form-group">
+                <label for="phone">Image URL</label>
+                <input type="text" ngModel="{{updateProduct?.imageUrl}}" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL">
+             </div>
+              <div class="modal-footer">
+                 <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                 <button (click)="onUpdateProduct(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+              </div>
+           </form>
+        </div>
+     </div>
+  </div>
+</div>
+
+<div *ngIf="products?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+  <div class="alert alert-info" role="alert" style="color: red;">
+    <h4 class="alert-heading">NO VEHICLES!</h4>
+    <p>There are not any vehicles left</p>
+  </div>
+</div>
